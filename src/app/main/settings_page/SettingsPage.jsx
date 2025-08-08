@@ -62,9 +62,8 @@ export default function SettingsPage() {
         };
 
         // Make the POST request
-        const response = await axios.post(
-            `${baseUrl}${OTP_URL_Endpoint}`,
-            body,
+        const response = await axios.get(
+            `${baseUrl}${OTP_URL_Endpoint}?email=${user.email}`,
             { headers }
         );
 
@@ -121,9 +120,8 @@ export default function SettingsPage() {
         }
 
         try {
-            await axios.post(
-                `${baseUrl}${deleteAccountEndpoint}`,
-                body,
+            await axios.delete(
+                `${baseUrl}${deleteAccountEndpoint}?email=${user.email}`,
                 { headers }
             );
 
