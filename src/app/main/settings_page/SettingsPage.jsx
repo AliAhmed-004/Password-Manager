@@ -30,6 +30,11 @@ export default function SettingsPage() {
 
     const navigate = useNavigate();
 
+    // Request Headers
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
     useEffect(() => {
         // Load user from localStorage
         const userStr = localStorage.getItem("user");
@@ -48,31 +53,7 @@ export default function SettingsPage() {
         }
     }, []);
 
-    function handleChange(e) {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    }
-
-    function handleEdit() {
-        setEditMode(true);
-        setSuccess("");
-        setError("");
-    }
-
-    function handleCancel() {
-        setEditMode(false);
-        setForm({
-            name: user.name,
-            email: user.email,
-            password: "",
-        });
-        setSuccess("");
-        setError("");
-    }
-
     async function handleEnable2FA() {
-        const headers = {
-            'Content-Type': 'application/json',
-        };
 
         const body = {
             'email': user.email
@@ -99,15 +80,10 @@ export default function SettingsPage() {
             'otp': otp
         }
 
-        // Request headers
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
         try {
             const response = await axios.post(
                 `${baseUrl}${verifyOTP_Endpoint}`,
-                JSON.stringify(body),
+                body,
                 { headers }
             );
 
@@ -142,15 +118,10 @@ export default function SettingsPage() {
             'email': user.email,
         }
 
-        // Request headers
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
         try {
             await axios.post(
                 `${baseUrl}${deleteAccountEndpoint}`,
-                JSON.stringify(body),
+                body,
                 { headers }
             );
 
