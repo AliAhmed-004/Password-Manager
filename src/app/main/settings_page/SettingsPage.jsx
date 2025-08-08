@@ -26,6 +26,7 @@ export default function SettingsPage() {
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const OTP_URL_Endpoint = import.meta.env.VITE_API_GET_OTP_URL;
     const verifyOTP_Endpoint = import.meta.env.VITE_API_VERIFY_OTP;
+    const deleteAccountEndpoint = import.meta.env.VITE_API_DELETE_ACCOUNT;
 
     const navigate = useNavigate();
 
@@ -147,6 +148,31 @@ export default function SettingsPage() {
             console.log("Setting user")
             setUser(updatedUser)
             setQR_URL('')
+        } catch (error) {
+            console.log(`Not OK: ${error}`)
+            
+        }
+    }
+
+    async function handleDeleteAccount() {
+        // Request body
+        const body = {
+            'email': user.email,
+        }
+
+        // Request headers
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        try {
+            await axios.post(
+                `${baseUrl}${deleteAccountEndpoint}`,
+                JSON.stringify(body),
+                { headers }
+            );
+
+            navigate('/', {replace: true})
         } catch (error) {
             console.log(`Not OK: ${error}`)
             
@@ -275,6 +301,13 @@ export default function SettingsPage() {
                     className="px-10 py-5 rounded-xl mt-5 bg-red-400"
                     onClick={handleLogout}>
                         Log Out
+                </button>
+
+                {/* Delete Button */}
+                <button 
+                    className="px-10 py-5 rounded-xl mt-5 bg-red-600"
+                    onClick={handleDeleteAccount}>
+                        Delete Account
                 </button>
             </div>
             <footer className="mt-10 text-gray-500 text-sm">
