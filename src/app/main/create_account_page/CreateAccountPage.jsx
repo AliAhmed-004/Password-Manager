@@ -82,86 +82,89 @@ export default function CreateAccountPage() {
     }
 
     return (
-        <div className='min-h-screen flex  items-center justify-center bg-gray-800'>
-            {/* Left side */}
-            <div className='min-h-screen w-full flex flex-col items-center justify-center'>
-                <div className='bg-gray-400 p-40'></div>
-            </div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white">
+            <div className="bg-gray-800 rounded-xl shadow-lg p-10 w-full max-w-md">
+                <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Create Account
+                </h2>
+                {serverError && <div className="mb-4 text-red-400 text-center">{serverError}</div>}
+                {successMessage && <div className="mb-4 text-green-400 text-center">{successMessage}</div>}
+                
+                <form className="flex flex-col gap-5" onSubmit={verifyCredentials}>
+                    <div>
+                        <label className="block text-gray-300 mb-1">Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={name}
+                            onChange={e => setName(e.target.value)}
+                            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 text-white"
+                            placeholder="Enter your name"
+                        />
+                        {errors.name && <span className="text-red-400 text-xs">{errors.name}</span>}
+                    </div>
 
-            {/* Right side */}
-            <div className='min-h-screen w-full flex flex-col items-start justify-center text-white gap-6 p-20'>
-                {/* Welcome Message */}
-                <div className='text-3xl text-gray-400'>
-                    <span>Welcome to this Demo of 2FA!</span>
-                    <br />
-                    <span className='text-xl font-bold'>Please enter your information to create an account</span>
-                </div>
+                    <div>
+                        <label className="block text-gray-300 mb-1">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            placeholder="example@email.com"
+                            autoComplete="email"
+                            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 text-white"
+                        />
+                        {errors.email && <span className="text-red-400 text-xs">{errors.email}</span>}
+                    </div>
 
-                <form className="flex flex-col gap-4 w-full max-w-sm" onSubmit={verifyCredentials}>
-                    {serverError && <div className="text-red-500 text-sm mb-2">{serverError}</div>}
-                    {successMessage && <div className="text-green-500 text-sm mb-2">{successMessage}</div>}
-                    <Textfield
-                        type="text"
-                        name="name"
-                        label={'Name'}
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        inputClassName="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
-                    />
-                    {errors.name && <span className="text-red-500 text-xs">{errors.name}</span>}
+                    <div>
+                        <label className="block text-gray-300 mb-1">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 text-white"
+                        />
+                        {errors.password && <span className="text-red-400 text-xs">{errors.password}</span>}
+                    </div>
 
-                    <Textfield
-                        type="email"
-                        name="email"
-                        label={'Email'}
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="example@email.com"
-                        autoComplete="email"
-                        inputClassName="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
-                    />
-                    {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
-
-                    <Textfield
-                        type="password"
-                        name="password"
-                        label={'Password'}
-                        placeholder='***'
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        inputClassName="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
-                    />
-                    {errors.password && <span className="text-red-500 text-xs">{errors.password}</span>}
-
-                    <Textfield
-                        type="password"
-                        name="confirmPassword"
-                        label={'Confirm Password'}
-                        placeholder='***'
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                        inputClassName="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
-                    />
-                    {errors.confirmPassword && <span className="text-red-500 text-xs">{errors.confirmPassword}</span>}
+                    <div>
+                        <label className="block text-gray-300 mb-1">Confirm Password</label>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Confirm your password"
+                            value={confirmPassword}
+                            onChange={e => setConfirmPassword(e.target.value)}
+                            className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 text-white"
+                        />
+                        {errors.confirmPassword && <span className="text-red-400 text-xs">{errors.confirmPassword}</span>}
+                    </div>
 
                     <button 
-                        className='mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-300' 
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition mt-4"
                         type="submit"
                     >
                         Create Account
                     </button>
                 </form>
 
-                <span className='gap-2'>
-                    Already have an account? 
+                <div className="mt-6 text-center">
+                    <span className="text-gray-400">Already have an account? </span>
                     <button 
                         onClick={() => navigate('/login', { replace: true })}
-                        className='text-blue-300'
+                        className="text-blue-400 hover:text-blue-300 transition"
                     >
                         Sign In!
                     </button>
-                </span>
+                </div>
             </div>
+            <footer className="mt-10 text-gray-500 text-sm">
+                &copy; {new Date().getFullYear()} 2FA Demo App. All rights reserved.
+            </footer>
         </div>
     );
 }

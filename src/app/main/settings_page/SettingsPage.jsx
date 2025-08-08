@@ -69,31 +69,6 @@ export default function SettingsPage() {
         setError("");
     }
 
-    function handleSave(e) {
-        e.preventDefault();
-        // Simulate save
-        if (!form.name || !form.email) {
-            setError("Name and email are required.");
-            return;
-        }
-        setUser({
-            name: form.name,
-            email: form.email,
-            is2FAEnabled: user.is2FAEnabled,
-        });
-        // Update localStorage
-        const userStr = localStorage.getItem("user");
-        if (userStr) {
-            const userObj = JSON.parse(userStr);
-            userObj.name = form.name;
-            userObj.email = form.email;
-            localStorage.setItem("user", JSON.stringify(userObj));
-        }
-        setEditMode(false);
-        setSuccess("Profile updated successfully!");
-        setError("");
-    }
-
     async function handleEnable2FA() {
         const headers = {
             'Content-Type': 'application/json',
@@ -136,6 +111,9 @@ export default function SettingsPage() {
                 { headers }
             );
 
+            // Clear any previous errors
+            setError("");
+
             // update user's info
             const updatedUser = {
                 'name': user.name,
@@ -148,9 +126,13 @@ export default function SettingsPage() {
             console.log("Setting user")
             setUser(updatedUser)
             setQR_URL('')
+            setSuccess("2FA enabled successfully!");
         } catch (error) {
             console.log(`Not OK: ${error}`)
-            
+            // Display the error message from the backend
+            setError(
+                error.response?.data?.message || 'Invalid OTP. Please try again.'
+            );
         }
     }
 
@@ -195,23 +177,7 @@ export default function SettingsPage() {
                 </h2>
                 {success && <div className="mb-4 text-green-400 text-center">{success}</div>}
                 {error && <div className="mb-4 text-red-400 text-center">{error}</div>}
-                <form onSubmit={handleSave} className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-8">
-                        <Textfield
-                            label={'Name'}
-                            value={user.name}
-                            placeholder="Your name"
-                        />
-                        <Textfield
-                            label={'New Password'}
-                            placeholder="***"
-                        />
-                        <Textfield
-                            label={'Confirm Password'}
-                            placeholder="***"
-                        />
-                    </div>
-                    
+                
                     {/* 2FA Section */}
                     <div className="border-t border-gray-600 pt-5">
                         <label className="block text-gray-300 mb-1">Two-Factor Authentication</label>
@@ -244,10 +210,10 @@ export default function SettingsPage() {
 
                     {/* QR Code */}
                     {qr_url &&
-                        <div>
+                        <div className="flex flex-col mt-3">
                             <QRCodeSVG value={qr_url} size={256} includeMargin={true}/>
                             
-                            <div className="flex items-end justify-between">
+                            <div className="flex items-end justify-between gap-4">
                                 {/* Textfield to verify OTP */}
                                 <Textfield
                                     type="number"
@@ -267,48 +233,22 @@ export default function SettingsPage() {
                         </div>
                     }
 
-                    <div className="flex justify-between mt-4">
-                        {!editMode ? (
-                            <button
-                                type="button"
-                                onClick={handleEdit}
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded transition"
-                            >
-                                Edit
-                            </button>
-                        ) : (
-                            <>
-                                <button
-                                    type="submit"
-                                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded transition"
-                                >
-                                    Save
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleCancel}
-                                    className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded transition"
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        )}
+                    <div className="flex flex-col justify-between mt-4">
+                        <button
+                            type="button"
+                            onClick={handleLogout}
+                            className="bg-red-400 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-xl transition"
+                        >
+                            Log Out
+                        </button>
+
+                        {/* Delete Button */}
+                        <button 
+                            className="px-10 py-5 rounded-xl mt-5 bg-red-600 hover:bg-red-800"
+                            onClick={handleDeleteAccount}>
+                                Delete Account
+                        </button>
                     </div>
-                </form>
-
-                {/* Logout Button */}
-                <button 
-                    className="px-10 py-5 rounded-xl mt-5 bg-red-400"
-                    onClick={handleLogout}>
-                        Log Out
-                </button>
-
-                {/* Delete Button */}
-                <button 
-                    className="px-10 py-5 rounded-xl mt-5 bg-red-600"
-                    onClick={handleDeleteAccount}>
-                        Delete Account
-                </button>
             </div>
             <footer className="mt-10 text-gray-500 text-sm">
                 &copy; {new Date().getFullYear()} 2FA Demo App. All rights reserved.
