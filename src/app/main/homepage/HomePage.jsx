@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Card from "./components/card";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function HomePage() {
 

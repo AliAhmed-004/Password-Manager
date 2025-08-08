@@ -19,8 +19,8 @@ export default function VerifyOTP() {
         setSuccess("");
         setLoading(true);
 
-        if (!otp || otp.length < 4) {
-            setError("Please enter a valid OTP.");
+        if (!otp || otp.length < 6) {
+            setError("Please enter a valid OTP (6 digits).");
             setLoading(false);
             return;
         }
@@ -35,7 +35,8 @@ export default function VerifyOTP() {
                 return;
             }
 
-            const response = await axios.post(
+            // Make the API call to verify OTP
+            await axios.post(
                 `${baseUrl}${verifyOtpEndpoint}`,
                 {
                     email: user.email,
@@ -49,9 +50,7 @@ export default function VerifyOTP() {
             );
 
             setSuccess("OTP verified successfully!");
-            // Optionally update user in localStorage to reflect verified status
-            user.is2FAEnabled = true;
-            localStorage.setItem("user", JSON.stringify(user));
+
             setTimeout(() => {
                 navigate("/homepage", { replace: true });
             }, 1000);
@@ -73,7 +72,7 @@ export default function VerifyOTP() {
                     Verify OTP
                 </h2>
                 <p className="text-gray-300 mb-6 text-center">
-                    Enter the One-Time Password sent to your email to continue.
+                    Enter the One-Time Password from your Google Authenticator app.
                 </p>
                 <form className="flex flex-col gap-4 w-full" onSubmit={handleVerify}>
                     {error && (

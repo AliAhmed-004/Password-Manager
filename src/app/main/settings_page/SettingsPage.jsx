@@ -127,7 +127,7 @@ export default function SettingsPage() {
                 { headers }
             );
 
-            navigate('/', {replace: true})
+            navigate('/create-account', {replace: true})
         } catch (error) {
             console.log(`Not OK: ${error}`)
             
@@ -142,8 +142,8 @@ export default function SettingsPage() {
         // Remove user from localStorage
         localStorage.setItem('user', null)
 
-        // Navigate to CreateAccoungPage
-        navigate('/', { replace: true })
+        // Navigate to CreateAccountPage
+        navigate('/create-account', { replace: true })
     }
 
     return (
@@ -155,6 +155,23 @@ export default function SettingsPage() {
                     </h2>
                     {success && <div className="mb-4 text-green-400 text-center">{success}</div>}
                     {error && <div className="mb-4 text-red-400 text-center">{error}</div>}
+                        <div className="mb-6 w-full">
+                            <h3 className="text-xl font-semibold mb-2 text-left text-gray-200">User Information</h3>
+                            <div className="bg-gray-700 rounded-lg p-4 flex flex-col gap-2">
+                                <div className="flex items-center">
+                                    <span className="font-medium text-gray-400 w-28">Name:</span>
+                                    <span className="text-white">{user.name}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className="font-medium text-gray-400 w-28">Email:</span>
+                                    <span className="text-white">{user.email}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className="font-medium text-gray-400 w-28">2FA:</span>
+                                    <span className="text-white">{user.is2FAEnabled ? "Enabled" : "Disabled"}</span>
+                                </div>
+                            </div>
+                        </div>
                     
                         {/* 2FA Section */}
                         <div className="border-t border-gray-600 pt-5">

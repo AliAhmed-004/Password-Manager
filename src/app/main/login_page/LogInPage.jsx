@@ -123,7 +123,7 @@ export default function LogInPage() {
                 <div className="mt-6 text-center">
                     <span className="text-gray-400">Don't have an account? </span>
                     <button 
-                        onClick={() => navigate('/', { replace: true })}
+                        onClick={() => navigate('/create-account', { replace: true })}
                         className="text-blue-400 hover:text-blue-300 transition"
                     >
                         Make one!
