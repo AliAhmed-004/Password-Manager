@@ -22,6 +22,8 @@ export default function SettingsPage() {
 
     const [qr_url, setQR_URL] = useState('');
     const [otp, setOtp] = useState('')
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const OTP_URL_Endpoint = import.meta.env.VITE_API_GET_OTP_URL;
@@ -132,6 +134,10 @@ export default function SettingsPage() {
         }
     }
 
+    function handleLogoutClick() {
+        setShowLogoutConfirm(true);
+    }
+
     function handleLogout() {
         // Remove user from localStorage
         localStorage.setItem('user', null)
@@ -141,89 +147,145 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white">
-            <div className="flex flex-col items-center justify-center bg-gray-800 rounded-xl shadow-lg p-10 w-full max-w-md">
-                <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Settings
-                </h2>
-                {success && <div className="mb-4 text-green-400 text-center">{success}</div>}
-                {error && <div className="mb-4 text-red-400 text-center">{error}</div>}
-                
-                    {/* 2FA Section */}
-                    <div className="border-t border-gray-600 pt-5">
-                        <label className="block text-gray-300 mb-1">Two-Factor Authentication</label>
-                        <div className="flex items-center justify-between p-3 bg-gray-700 rounded border border-gray-600">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">{user.is2FAEnabled ? "🔒" : "⚠️"}</span>
-                                <div>
-                                    <div className="text-white font-medium">
-                                        {user.is2FAEnabled ? "Enabled" : "Disabled"}
-                                    </div>
-                                    <div className="text-gray-400 text-sm">
-                                        {user.is2FAEnabled 
-                                            ? "Your account is protected with 2FA" 
-                                            : "Enable 2FA for enhanced security"
-                                        }
+        <>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white">
+                <div className="flex flex-col items-center justify-center bg-gray-800 rounded-xl shadow-lg p-10 w-full max-w-md">
+                    <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        Settings
+                    </h2>
+                    {success && <div className="mb-4 text-green-400 text-center">{success}</div>}
+                    {error && <div className="mb-4 text-red-400 text-center">{error}</div>}
+                    
+                        {/* 2FA Section */}
+                        <div className="border-t border-gray-600 pt-5">
+                            <label className="block text-gray-300 mb-1">Two-Factor Authentication</label>
+                            <div className="flex items-center justify-between p-3 bg-gray-700 rounded border border-gray-600">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-2xl">{user.is2FAEnabled ? "🔒" : "⚠️"}</span>
+                                    <div>
+                                        <div className="text-white font-medium">
+                                            {user.is2FAEnabled ? "Enabled" : "Disabled"}
+                                        </div>
+                                        <div className="text-gray-400 text-sm">
+                                            {user.is2FAEnabled 
+                                                ? "Your account is protected with 2FA" 
+                                                : "Enable 2FA for enhanced security"
+                                            }
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            {!user.is2FAEnabled && (
-                                <button
-                                    type="button"
-                                    onClick={handleEnable2FA}
-                                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition text-sm"
-                                >
-                                    Enable 2FA
-                                </button>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* QR Code */}
-                    {qr_url &&
-                        <div className="flex flex-col mt-3">
-                            <QRCodeSVG value={qr_url} size={256} includeMargin={true}/>
-                            
-                            <div className="flex items-end justify-between gap-4">
-                                {/* Textfield to verify OTP */}
-                                <Textfield
-                                    type="number"
-                                    name="otp"
-                                    label={'Please enter the OTP to verify'}
-                                    onChange={e => setOtp(e.target.value)}
-                                    inputClassName="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
-                                    className="mt-10"
-                                />
-
-                                <button 
-                                    className="px-4 py-2 rounded-2xl bg-green-600"
-                                    onClick={handleVerifyOtp}>
-                                        Verify
-                                </button>
+                                {!user.is2FAEnabled && (
+                                    <button
+                                        type="button"
+                                        onClick={handleEnable2FA}
+                                        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition text-sm"
+                                    >
+                                        Enable 2FA
+                                    </button>
+                                )}
                             </div>
                         </div>
-                    }
 
-                    <div className="flex flex-col justify-between mt-4">
-                        <button
-                            type="button"
-                            onClick={handleLogout}
-                            className="bg-red-400 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-xl transition"
-                        >
-                            Log Out
-                        </button>
+                        {/* QR Code */}
+                        {qr_url &&
+                            <div className="flex flex-col mt-3">
+                                <QRCodeSVG value={qr_url} size={256} includeMargin={true}/>
+                                
+                                <div className="flex items-end justify-between gap-4">
+                                    {/* Textfield to verify OTP */}
+                                    <Textfield
+                                        type="number"
+                                        name="otp"
+                                        label={'Please enter the OTP to verify'}
+                                        onChange={e => setOtp(e.target.value)}
+                                        inputClassName="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-300"
+                                        className="mt-10"
+                                    />
 
-                        {/* Delete Button */}
-                        <button 
-                            className="px-10 py-5 rounded-xl mt-5 bg-red-600 hover:bg-red-800"
-                            onClick={handleDeleteAccount}>
-                                Delete Account
-                        </button>
-                    </div>
+                                    <button 
+                                        className="px-4 py-2 rounded-2xl bg-green-600"
+                                        onClick={handleVerifyOtp}>
+                                            Verify
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                        <div className="flex flex-col justify-between mt-4">
+                            <button
+                                type="button"
+                                onClick={handleLogoutClick}
+                                className="bg-red-400 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-xl transition"
+                            >
+                                Log Out
+                            </button>
+
+                            {/* Delete Button */}
+                            <button 
+                                className="px-10 py-5 rounded-xl mt-5 bg-red-600 hover:bg-red-800"
+                                onClick={() => setShowDeleteConfirm(true)}>
+                                    Delete Account
+                            </button>
+                        </div>
+                </div>
+                <footer className="mt-10 text-gray-500 text-sm">
+                    &copy; {new Date().getFullYear()} 2FA Demo App. All rights reserved.
+                </footer>
             </div>
-            <footer className="mt-10 text-gray-500 text-sm">
-                &copy; {new Date().getFullYear()} 2FA Demo App. All rights reserved.
-            </footer>
-        </div>
+            
+            {/* Logout Confirmation Modal */}
+            {showLogoutConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 p-6 rounded-lg max-w-sm w-full mx-4 border border-gray-600">
+                        <h3 className="text-xl font-bold mb-4 text-white">Confirm Logout</h3>
+                        <p className="text-gray-300 mb-6">Are you sure you want to log out?</p>
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={() => {
+                                    setShowLogoutConfirm(false);
+                                    handleLogout();
+                                }}
+                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
+                            >
+                                Yes, Logout
+                            </button>
+                            <button 
+                                onClick={() => setShowLogoutConfirm(false)}
+                                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Account Confirmation Modal */}
+            {showDeleteConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 p-6 rounded-lg max-w-sm w-full mx-4 border border-gray-600">
+                        <h3 className="text-xl font-bold mb-4 text-white">Confirm Account Deletion</h3>
+                        <p className="text-gray-300 mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={() => {
+                                    setShowDeleteConfirm(false);
+                                    handleDeleteAccount();
+                                }}
+                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
+                            >
+                                Yes, Delete
+                            </button>
+                            <button 
+                                onClick={() => setShowDeleteConfirm(false)}
+                                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
