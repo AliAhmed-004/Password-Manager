@@ -4,6 +4,7 @@ import CreateAccountPage from './app/main/create_account_page/CreateAccountPage'
 import LogInPage from './app/main/login_page/LogInPage';
 import HomePage from './app/main/homepage/HomePage';
 import SettingsPage from './app/main/settings_page/SettingsPage';
+import VerifyOTP from './app/main/verify_otp/VerifyOTP';
 
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/login" element={<LogInPage />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/verifyOTP" element={<VerifyOTP />} />
       </Routes>
     </Router>
   );

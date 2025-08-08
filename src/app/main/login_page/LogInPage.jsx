@@ -58,9 +58,15 @@ export default function LogInPage() {
 
             // Save the user data in local storage
             localStorage.setItem('user', JSON.stringify(user))
+
             
-            // Navigate to HomePage
-            navigate('/homepage', { replace: true })
+            if (!user.is2FAEnabled) {
+                // Navigate to HomePage
+                navigate('/homepage', { replace: true });
+                return;
+            }
+
+            navigate('/verifyOTP');
         } catch (err) {
 
             setServerError(

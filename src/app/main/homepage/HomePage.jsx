@@ -33,7 +33,7 @@ export default function HomePage() {
                 {!is2FAEnabled && 
                     <Card 
                         title="2FA Disabled"
-                        description="It seems like two factor authentication for your account is disabled"
+                        description="It seems like two factor authentication for your account is disabled. Enable it in settings for more security"
                         icon="🔒"
                         buttonText="Enable 2FA"
                     />
@@ -46,6 +46,7 @@ export default function HomePage() {
                     icon="⚙"
                     buttonText="Go to settings"
                     onButtonClick={() => navigate('/settings')}
+                    addButton={true}
                 />
             </div>
             <footer className="mt-16 text-gray-500 text-sm">
