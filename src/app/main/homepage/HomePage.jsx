@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import Card from "./components/card";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import AddPasswordModal from "./components/AddPasswordModal";
 
 export default function HomePage() {
     const [is2FAEnabled, setIs2FAEnabled] = useState(false);
     const [user, setUser] = useState({ name: "", email: "" });
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [showAddPasswordModal, setShowAddPasswordModal] = useState(false);
 
     const navigate = useNavigate();
 
@@ -25,6 +25,13 @@ export default function HomePage() {
         setSidebarOpen(!sidebarOpen);
     };
 
+    const handleSavePassword = async (passwordData) => {
+        // TODO: Implement password saving logic
+        console.log("Saving password:", passwordData);
+        // For now, just show a success message
+        alert("Password saved successfully!");
+    };
+
     const NavigationItem = ({ icon, text, onClick, active = false }) => (
         <button
             onClick={onClick}
@@ -40,7 +47,7 @@ export default function HomePage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white">
             {/* Mobile Header */}
-            <div className="lg:hidden bg-gray-800 border-b border-gray-700 px-4 py-3">
+            <div className="lg:hidden md:hidden bg-gray-800 border-b border-gray-700 px-4 py-3">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                         SecureVault
@@ -64,7 +71,7 @@ export default function HomePage() {
                     </h1>
                     <div className="flex items-center gap-4">
                         <NavigationItem icon="🔍" text="Search" onClick={() => {}} />
-                        <NavigationItem icon="➕" text="Add Password" onClick={() => {}} />
+                        <NavigationItem icon="➕" text="Add Password" onClick={() => setShowAddPasswordModal(true)} />
                         <NavigationItem icon="⚙️" text="Settings" onClick={() => navigate('/settings')} />
                         <div className="w-px h-6 bg-gray-600"></div>
                         <div className="flex items-center gap-2">
@@ -86,7 +93,7 @@ export default function HomePage() {
                         <div className="space-y-2">
                             <NavigationItem icon="🏠" text="Dashboard" onClick={() => {}} active={true} />
                             <NavigationItem icon="🔍" text="Search Passwords" onClick={() => {}} />
-                            <NavigationItem icon="➕" text="Add Password" onClick={() => {}} />
+                            <NavigationItem icon="➕" text="Add Password" onClick={() => setShowAddPasswordModal(true)} />
                             <NavigationItem icon="📁" text="Categories" onClick={() => {}} />
                             <NavigationItem icon="🔐" text="Security" onClick={() => {}} />
                         </div>
@@ -132,7 +139,7 @@ export default function HomePage() {
                                 <div className="space-y-2">
                                     <NavigationItem icon="🏠" text="Dashboard" onClick={() => {}} active={true} />
                                     <NavigationItem icon="🔍" text="Search Passwords" onClick={() => {}} />
-                                    <NavigationItem icon="➕" text="Add Password" onClick={() => {}} />
+                                    <NavigationItem icon="➕" text="Add Password" onClick={() => setShowAddPasswordModal(true)} />
                                     <NavigationItem icon="📁" text="Categories" onClick={() => {}} />
                                     <NavigationItem icon="🔐" text="Security" onClick={() => {}} />
                                     <NavigationItem icon="⚙️" text="Settings" onClick={() => navigate('/settings')} />
@@ -226,7 +233,7 @@ export default function HomePage() {
                                         Start building your secure password vault. Add your first password to get started with SecureVault.
                                     </p>
                                     <button
-                                        onClick={() => {}} // TODO: Navigate to add password page
+                                        onClick={() => setShowAddPasswordModal(true)}
                                         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition flex items-center gap-2 mx-auto"
                                     >
                                         <span>➕</span>
@@ -311,6 +318,13 @@ export default function HomePage() {
                     </div>
                 </div>
             </div>
+
+            {/* Add Password Modal */}
+            <AddPasswordModal
+                isOpen={showAddPasswordModal}
+                onClose={() => setShowAddPasswordModal(false)}
+                onSave={handleSavePassword}
+            />
         </div>
     );
 }
