@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import AddPasswordModal from "./components/AddPasswordModal";
 
 export default function HomePage() {
@@ -14,6 +16,7 @@ export default function HomePage() {
         // Grab the user from localStorage
         const userStr = localStorage.getItem('user');
 
+        // Create the user object
         if (userStr) {
             const user = JSON.parse(userStr);
             setIs2FAEnabled(user.is2FAEnabled);
@@ -26,9 +29,37 @@ export default function HomePage() {
     };
 
     const handleSavePassword = async (passwordData) => {
-        // TODO: Implement password saving logic
-        console.log("Saving password:", passwordData);
-        // For now, just show a success message
+        const baseUrl = import.meta.env.VITE_BASE_URL;
+        const addPasswordEndpoint = import.meta.env.VITE_API_ADD_PASSWORD;
+
+        const body = {
+            "user": {
+                "email": user.email
+              },
+              "password_info": {
+                "title": passwordData['title'],
+                "username": passwordData['username'],
+                "password": passwordData['password'],
+                "url": passwordData['website'],
+                "category": passwordData['category'],
+                "notes": passwordData['notes']
+              }
+        }
+
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        try {
+            const response = await axios.post(
+                `${baseUrl}${addPasswordEndpoint}`,
+                body,
+                { headers },
+            );
+        } catch (error) {
+            console.log(`Exception caught while adding password: ${error}`)
+        }
+
         alert("Password saved successfully!");
     };
 

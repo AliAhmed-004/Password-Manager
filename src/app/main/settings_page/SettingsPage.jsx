@@ -127,8 +127,7 @@ export default function SettingsPage() {
 
             navigate('/create-account', {replace: true})
         } catch (error) {
-            console.log(`Not OK: ${error}`)
-            
+            console.log(`Exception caught while deleting account: ${error}`)
         }
     }
 
